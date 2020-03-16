@@ -1,18 +1,27 @@
 const core = require('@actions/core');
-const wait = require('./wait');
-
+const { github, context } = require("@actions/github");
 
 // most @actions toolkit packages have async methods
 async function run() {
   try {
-    const ms = core.getInput('milliseconds');
-    console.log(`Waiting ${ms} milliseconds ...`)
+    if (!context.payload.pull_request) {
+      core.error("this action only works on pull_request events");
+      core.setOutput("comment-created", "false");
+      return;
+    }
 
-    core.debug((new Date()).toTimeString())
-    await wait(parseInt(ms));
-    core.debug((new Date()).toTimeString())
+    const repoName = context.repo.repo;
+    const repoOwner = context.repo.owner;
+    const githubToken = core.getInput("github-token");
+    const githubClient = new github.GitHub(githubToken);
+    const prNumber = context.payload.pull_request.number;
 
-    core.setOutput('time', new Date().toTimeString());
+    await githubClient.issues.createComment({
+      repo: repoName,
+      owner: repoOwner,
+      body: 'Hello, world',
+      issue_number: prNumber,
+    });
   }
   catch (error) {
     core.setFailed(error.message);
