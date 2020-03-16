@@ -1,6 +1,6 @@
 {
   "name": "spectral-comment-action",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Comments pull requests with spectral linter outputs",
   "main": "index.js",
   "scripts": {
