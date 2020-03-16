@@ -1,9 +1,10 @@
 const core = require('@actions/core');
-const { github, context } = require("@actions/github");
+const github = require("@actions/github");
 
 // most @actions toolkit packages have async methods
 async function run() {
   try {
+    const context = github.context;
     if (!context.payload.pull_request) {
       core.error("this action only works on pull_request events");
       core.setOutput("comment-created", "false");
