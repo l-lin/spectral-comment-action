@@ -1,7 +1,7 @@
 {
-  "name": "javascript-action",
+  "name": "spectral-comment-action",
   "version": "1.0.0",
-  "description": "JavaScript Action Template",
+  "description": "Comments pull requests with spectral linter outputs",
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js",
@@ -10,24 +10,26 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/javascript-action.git"
+    "url": "git+https://github.com/l-lin/spectral-comment-action.git"
   },
   "keywords": [
-    "GitHub",
-    "Actions",
-    "JavaScript"
+    "actions",
+    "pull-requests",
+    "comment"
   ],
-  "author": "GitHub",
+  "author": "Louis LIN",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/actions/javascript-action/issues"
+    "url": "https://github.com/l-lin/spectral-comment-action/issues"
   },
-  "homepage": "https://github.com/actions/javascript-action#readme",
+  "homepage": "https://github.com/l-lin/spectral-comment-action#readme",
   "dependencies": {
-    "@actions/core": "^1.1.1"
+    "@actions/core": "^1.2.3",
+    "@actions/github": "^2.1.1"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.20.5",
+    "acorn": "^7.1.1",
     "eslint": "^6.3.0",
     "jest": "^24.9.0"
   }
