@@ -4,6 +4,12 @@ inputs:
   github-token:
     description: 'Github token'
     required: true
+  spectral-lint-results:
+    description: 'Spectral lint output results in JSON'
+    required: true
+  github-url:
+    description: 'Github URL'
+    default: 'https://github.com'
 runs:
   using: 'node12'
   main: 'dist/index.js'

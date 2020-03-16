@@ -490,27 +490,37 @@ module.exports = require("os");
 
 const core = __webpack_require__(470);
 const github = __webpack_require__(469);
+const toMarkdown = __webpack_require__(594);
 
 // most @actions toolkit packages have async methods
 async function run() {
   try {
     const context = github.context;
     if (!context.payload.pull_request) {
-      core.error("this action only works on pull_request events");
-      core.setOutput("comment-created", "false");
+      core.error('this action only works on pull_request events');
+      core.setOutput('comment-created', 'false');
       return;
     }
 
     const repoName = context.repo.repo;
     const repoOwner = context.repo.owner;
-    const githubToken = core.getInput("github-token");
+    const githubToken = core.getInput('github-token');
     const githubClient = new github.GitHub(githubToken);
     const prNumber = context.payload.pull_request.number;
+    const lintResults = core.getInput('spectral-lint-results');
+    const githubURL = core.getInput('github-url');
+    const project = {
+      githubURL: githubURL,
+      path: process.env.GITHUB_REPOSITORY,
+      branch: process.env.GITHUB_REF,
+      buildDir: process.env.GITHUB_WORKSPACE
+    };
 
+    const md = await toMarkdown(lintResults, project);
     await githubClient.issues.createComment({
       repo: repoName,
       owner: repoOwner,
-      body: 'Hello, world',
+      body: md,
       issue_number: prNumber,
     });
   }
@@ -8312,6 +8322,92 @@ function getPageLinks (link) {
 
   return links
 }
+
+
+/***/ }),
+
+/***/ 581:
+/***/ (function(module) {
+
+const emojisMap = {
+  '0': ':x:',
+  '1': ':warning:',
+  '2': ':information_source:',
+  '3': ':eyes:'
+};
+
+let buildRelativeFilePath = (absFilePath, projectDir) => {
+  return absFilePath.replace(projectDir + '/', '');
+};
+
+let buildNote = (pb, project, relativeFilePath) => {
+  const line = pb.range.start.line + 1;
+  const column = pb.range.start.character + 1;
+  const link = project.githubURL + '/' + project.path + '/blob/' + project.branch + '/' + relativeFilePath + '#L' + line;
+  return `|[${relativeFilePath}:${line}:${column}](${link})|${emojisMap[pb.severity]}|${pb.code}|${pb.message}|`;
+};
+
+
+let buildNotes = (pbs, project, absFilePath) => {
+  const relativeFilePath = buildRelativeFilePath(project.buildDir, absFilePath);
+  let md = `> ${relativeFilePath}
+
+|Range|Severity|Code|Message|
+|-----|--------|----|-------|
+`
+  for (var i = 0, len = pbs.length; i < len; i++) {
+    md += buildNote(pbs[i], project, relativeFilePath) + '\n';
+  }
+  return md;
+};
+
+module.exports = {
+  buildRelativeFilePath: buildRelativeFilePath,
+  buildNote: buildNote,
+  buildNotes: buildNotes
+};
+
+
+/***/ }),
+
+/***/ 594:
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const processPbs = __webpack_require__(986);
+const { buildNotes } = __webpack_require__(581);
+
+let toMarkdown = async function(results, project) {
+  let processedPbs = await processPbs(results);
+  return new Promise(resolve => {
+    const pbsMap = processedPbs.filteredPbs;
+    // no pb => no message
+    if (Object.keys(pbsMap).length === 0) {
+      resolve('');
+      return;
+    }
+    const nbPbs = processedPbs.filteredPbs.length;
+    const severitiesCount = processedPbs.severitiesCount;
+    const nbErrors = severitiesCount[0];
+    const nbWarnings = severitiesCount[1];
+    const nbInfos = severitiesCount[2];
+    const nbHints = severitiesCount[3];
+    let md = `<details>
+<summary>OpenAPI lint errors: ${nbPbs} problems (${nbErrors} errors, ${nbWarnings} warnings, ${nbInfos} infos, ${nbHints} hints)</summary>
+
+`;
+    for (let absFilePath in pbsMap) {
+      if (Object.prototype.hasOwnProperty.call(pbsMap, absFilePath)) {
+        const pbs = pbsMap[absFilePath];
+        md += buildNotes(pbs, project, absFilePath);
+        md += '\n';
+      }
+    }
+    md += `</details>`;
+    resolve(md);
+  });
+};
+
+module.exports = toMarkdown;
 
 
 /***/ }),
@@ -25306,6 +25402,43 @@ function onceStrict (fn) {
   f.called = false
   return f
 }
+
+
+/***/ }),
+
+/***/ 986:
+/***/ (function(module) {
+
+let processPbs = function(results) {
+  return new Promise(resolve => {
+    const resultsJSON = eval(results);
+    if (!Array.isArray(resultsJSON)) {
+      throw new Error('"results" must be an array');
+    }
+    let severitiesCount = {
+      '0': 0,
+      '1': 0,
+      '2': 0,
+      '3': 0
+    };
+    let filteredPbs = {};
+    for (var i = 0, len = resultsJSON.length; i < len; i++) {
+      const pb = resultsJSON[i];
+      severitiesCount[pb.severity]++;
+      if (!filteredPbs[pb.source]) {
+        filteredPbs[pb.source] = [];
+      }
+      filteredPbs[pb.source].push(pb);
+    }
+    resolve({filteredPbs: filteredPbs, severitiesCount: severitiesCount});
+    if (!results) {
+      throw new Error('"results" must not be empty');
+    }
+  });
+};
+
+module.exports = processPbs;
+
 
 
 /***/ })

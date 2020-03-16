@@ -1,0 +1,7 @@
+greeting:
+  type: object
+  description: Object representing the message delivered by the server
+  properties:
+    message:
+      type: string
+      description: The message delivered by the server
