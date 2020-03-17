@@ -2,11 +2,16 @@ name: 'Spectral comment'
 description: 'Comments pull requests with Spectral linter outputs'
 inputs:
   github-token:
+    required: true
     description: 'Github token'
+  file-glob:
     required: true
-  spectral-lint-results:
-    description: 'Spectral lint output results in JSON'
+    description: The file path to lint with Spectral
+    default: '*.oas.{json,yml,yaml}'
+  spectral-ruleset:
     required: true
+    description: Ruleset file to load in Spectral
+    default: 'spectral:oas'
   github-url:
     description: 'Github URL'
     default: 'https://github.com'

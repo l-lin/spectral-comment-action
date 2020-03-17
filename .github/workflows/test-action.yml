@@ -14,14 +14,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '12.x'
-    - id: lint
-      env:
-        OAS_PATH: sample/spec/openapi.yml
-      run: |
-        npx @stoplight/spectral@5.1.0 lint $OAS_PATH -f json -q -F error > spectral-lint-results.json
-        echo "::set-output name=spectral-lint-results::$(cat spectral-lint-results.json)"
+    - run: npm ci
     - uses: ./
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        spectral-lint-results: ${{ steps.lint.outputs.spectral-lint-results }}
+        file-glob: sample/spec/openapi.yml
 

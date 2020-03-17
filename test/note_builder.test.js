@@ -1,6 +1,6 @@
-const { buildRelativeFilePath, buildNote, buildNotes } = require('./note_builder');
+const { buildRelativeFilePath, buildNote, buildNotes } = require('../src/note_builder');
 
-test('sanitizeProjectPath', () => {
+test('buildRelativeFilePath', () => {
   const relativeFilePath = buildRelativeFilePath('/home/llin/spectral-comment-action/sample/spec/openapi.yml', '/home/llin/spectral-comment-action');
   expect(relativeFilePath).not.toBeNull();
   expect(relativeFilePath).toBe('sample/spec/openapi.yml');
@@ -86,11 +86,11 @@ test('buildNotes', () => {
   const absFilePath = '/home/llin/spectral-comment-action/sample/spec/openapi.yml';
   const notes = buildNotes(pbs, project, absFilePath);
   expect(notes).not.toBeNull();
-  expect(notes).toBe(`> /home/llin/spectral-comment-action
+  expect(notes).toBe(`> sample/spec/openapi.yml
 
 |Range|Severity|Code|Message|
 |-----|--------|----|-------|
-|[/home/llin/spectral-comment-action:1:1](https://github.com/l-lin/spectral-comment-action/blob/test-comment-pr//home/llin/spectral-comment-action#L1)|:x:|api-servers|OpenAPI \`servers\` must be present and non-empty array.|
-|[/home/llin/spectral-comment-action:2:6](https://github.com/l-lin/spectral-comment-action/blob/test-comment-pr//home/llin/spectral-comment-action#L2)|:warning:|info-description|OpenAPI object info \`description\` must be present and non-empty string.|
+|[sample/spec/openapi.yml:1:1](https://github.com/l-lin/spectral-comment-action/blob/test-comment-pr/sample/spec/openapi.yml#L1)|:x:|api-servers|OpenAPI \`servers\` must be present and non-empty array.|
+|[sample/spec/openapi.yml:2:6](https://github.com/l-lin/spectral-comment-action/blob/test-comment-pr/sample/spec/openapi.yml#L2)|:warning:|info-description|OpenAPI object info \`description\` must be present and non-empty string.|
 `);
 });

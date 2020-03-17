@@ -18,7 +18,7 @@ let buildNote = (pb, project, relativeFilePath) => {
 
 
 let buildNotes = (pbs, project, absFilePath) => {
-  const relativeFilePath = buildRelativeFilePath(project.buildDir, absFilePath);
+  const relativeFilePath = buildRelativeFilePath(absFilePath, project.buildDir);
   let md = `> ${relativeFilePath}
 
 |Range|Severity|Code|Message|

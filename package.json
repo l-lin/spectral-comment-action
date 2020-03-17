@@ -4,8 +4,8 @@
   "description": "Comments pull requests with spectral linter outputs",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint index.js",
-    "package": "ncc build index.js -o dist",
+    "lint": "eslint src/*.js test/*.js",
+    "package": "ncc build src/index.js -o dist",
     "test": "jest"
   },
   "repository": {
@@ -25,7 +25,9 @@
   "homepage": "https://github.com/l-lin/spectral-comment-action#readme",
   "dependencies": {
     "@actions/core": "^1.2.3",
-    "@actions/github": "^2.1.1"
+    "@actions/github": "^2.1.1",
+    "@stoplight/spectral": "^5.1.0",
+    "fast-glob": "^3.2.2"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.20.5",
