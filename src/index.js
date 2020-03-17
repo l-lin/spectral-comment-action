@@ -28,7 +28,7 @@ async function run() {
       buildDir: process.env.GITHUB_WORKSPACE
     };
 
-    const fileContents = readFilesToAnalyze(project.buildDir, inputs.fileGlob);
+    const fileContents = await readFilesToAnalyze(project.buildDir, inputs.fileGlob);
     const spectral = await createSpectral();
     let processedPbs = initProcessedPbs();
     for (var i = 0, len = fileContents.length; i < len; i++) {

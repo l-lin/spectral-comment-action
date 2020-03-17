@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint src/*.js test/*.js",
-    "package": "ncc build src/index.js -o dist",
     "test": "jest"
   },
   "repository": {
@@ -30,7 +29,6 @@
     "fast-glob": "^3.2.2"
   },
   "devDependencies": {
-    "@zeit/ncc": "^0.20.5",
     "acorn": "^7.1.1",
     "eslint": "^6.3.0",
     "jest": "^24.9.0"
