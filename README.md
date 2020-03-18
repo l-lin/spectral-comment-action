@@ -10,6 +10,8 @@
 
 ![spectral-comment-action](./spectral-comment-action-sample.png)
 
+Check [PR showcase](https://github.com/l-lin/spectral-comment-action/pull/3#issuecomment-600786379).
+
 ## Usage
 
 Add or edit an existing workflow:
