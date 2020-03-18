@@ -29,7 +29,7 @@ async function run() {
     };
 
     const fileContents = await readFilesToAnalyze(project.buildDir, inputs.fileGlob);
-    const spectral = await createSpectral();
+    const spectral = await createSpectral(inputs.spectralRuleset);
     let processedPbs = initProcessedPbs();
     for (var i = 0, len = fileContents.length; i < len; i++) {
       const pbs = await runSpectral(spectral, fileContents[i].content);
