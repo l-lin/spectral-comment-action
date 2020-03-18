@@ -33,7 +33,7 @@ async function run() {
     let processedPbs = initProcessedPbs();
     for (var i = 0, len = fileContents.length; i < len; i++) {
       const pbs = await runSpectral(spectral, fileContents[i].content);
-      processedPbs = processPbs(processedPbs, pbs);
+      processedPbs = processPbs(fileContents[i].file, processedPbs, pbs);
     }
 
     const md = await toMarkdown(processedPbs, project);

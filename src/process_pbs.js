@@ -10,24 +10,24 @@ let initProcessedPbs = () => {
   };
 };
 
-let processPbs = (processedPbs, pbs) => {
+let processPbs = (source, processedPbs, pbs) => {
   for (var i = 0; i < pbs.length; i++) {
     const pb = pbs[i];
-    if (hasPb(processedPbs.filteredPbs, pb)) {
+    if (hasPb(source, processedPbs.filteredPbs, pb)) {
       continue;
     }
     processedPbs.severitiesCount[pb.severity]++;
-    if (!processedPbs.filteredPbs[pb.source]) {
-      processedPbs.filteredPbs[pb.source] = [];
+    if (!processedPbs.filteredPbs[source]) {
+      processedPbs.filteredPbs[source] = [];
     }
-    processedPbs.filteredPbs[pb.source].push(pb);
+    processedPbs.filteredPbs[source].push(pb);
   }
   return processedPbs;
 };
 
-let hasPb = (filteredPbs, pb) => {
+let hasPb = (source, filteredPbs, pb) => {
   for (var i = 0; i < filteredPbs; i++) {
-    if (pb.source === filteredPbs[i].source &&
+    if (source === filteredPbs[i].source &&
       pb.severity === filteredPbs[i].severity &&
       pb.code === filteredPbs[i].code &&
       pb.range.start.line === filteredPbs[i].range.start.line &&

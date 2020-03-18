@@ -2,7 +2,7 @@ const { initProcessedPbs, processPbs } = require('../src/process_pbs');
 
 test('no errors (i.e. empty array)', () => {
   const pbs = [];
-  let md = processPbs({}, pbs);
+  let md = processPbs('', {}, pbs);
   expect(md).not.toBeNull();
 });
 
@@ -31,11 +31,10 @@ test('1 error', () => {
           "line": 0,
           "character": 0
         }
-      },
-      "source": "/home/llin/spectral-comment-action/sample/spec/openapi.yml"
+      }
     }
   ];
-  let processedPbs = processPbs(initProcessedPbs(), pbs);
+  let processedPbs = processPbs('/home/llin/spectral-comment-action/sample/spec/openapi.yml', initProcessedPbs(), pbs);
   expect(processedPbs).not.toBeNull();
   expect(processedPbs.severitiesCount['0']).toBe(1);
   expect(processedPbs.severitiesCount['1']).toBe(0);
@@ -46,7 +45,7 @@ test('1 error', () => {
 });
 
 test('multiple errors', () => {
-  const pbs = [
+  const pbsOpenApi = [
     {
       "code": "invalid-ref",
       "path": [
@@ -70,8 +69,7 @@ test('multiple errors', () => {
           "line": 0,
           "character": 0
         }
-      },
-      "source": "/home/llin/spectral-comment-action/sample/spec/openapi.yml"
+      }
     },
     {
       "code": "api-servers",
@@ -87,8 +85,7 @@ test('multiple errors', () => {
           "line": 19,
           "character": 47
         }
-      },
-      "source": "/home/llin/spectral-comment-action/sample/spec/openapi.yml"
+      }
     },
     {
       "code": "info-description",
@@ -106,9 +103,10 @@ test('multiple errors', () => {
           "line": 7,
           "character": 16
         }
-      },
-      "source": "/home/llin/spectral-comment-action/sample/spec/openapi.yml"
-    },
+      }
+    }
+  ];
+  const pbsFoobar = [
     {
       "code": "oas3-schema",
       "path": [
@@ -129,8 +127,7 @@ test('multiple errors', () => {
           "line": 7,
           "character": 51
         }
-      },
-      "source": "/home/llin/spectral-comment-action/sample/spec/paths/foobar.yml"
+      }
     },
     {
       "code": "operation-description",
@@ -150,8 +147,7 @@ test('multiple errors', () => {
           "line": 7,
           "character": 51
         }
-      },
-      "source": "/home/llin/spectral-comment-action/sample/spec/paths/foobar.yml"
+      }
     },
     {
       "code": "operation-operationId",
@@ -171,8 +167,7 @@ test('multiple errors', () => {
           "line": 7,
           "character": 51
         }
-      },
-      "source": "/home/llin/spectral-comment-action/sample/spec/paths/foobar.yml"
+      }
     },
     {
       "code": "operation-tags",
@@ -192,12 +187,12 @@ test('multiple errors', () => {
           "line": 7,
           "character": 51
         }
-      },
-      "source": "/home/llin/spectral-comment-action/sample/spec/paths/foobar.yml"
+      }
     }
   ];
 
-  let processedPbs = processPbs(initProcessedPbs(), pbs);
+  let processedPbs = processPbs('/home/llin/spectral-comment-action/sample/spec/openapi.yml', initProcessedPbs(), pbsOpenApi);
+  processedPbs = processPbs('/home/llin/spectral-comment-action/sample/spec/paths/foobar.yml', processedPbs, pbsFoobar);
   expect(processedPbs).not.toBeNull();
   expect(processedPbs.severitiesCount['0']).toBe(2);
   expect(processedPbs.severitiesCount['1']).toBe(5);
@@ -228,8 +223,7 @@ test('append an error', () => {
           "line": 7,
           "character": 16
         }
-      },
-      "source": "/home/llin/spectral-comment-action/sample/spec/openapi.yml"
+      }
     }
   ];
   processedPbs.severitiesCount['1']++;
@@ -257,11 +251,10 @@ test('append an error', () => {
           "line": 0,
           "character": 0
         }
-      },
-      "source": "/home/llin/spectral-comment-action/sample/spec/openapi.yml"
+      }
     }
   ];
-  processedPbs = processPbs(processedPbs, pbs);
+  processedPbs = processPbs('/home/llin/spectral-comment-action/sample/spec/openapi.yml', processedPbs, pbs);
   expect(processedPbs).not.toBeNull();
   expect(processedPbs.severitiesCount['0']).toBe(1);
   expect(processedPbs.severitiesCount['1']).toBe(1);
