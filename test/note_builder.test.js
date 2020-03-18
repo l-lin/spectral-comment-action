@@ -28,9 +28,9 @@ test('buildNote', () => {
   };
   const project = {
     githubURL: 'https://github.com',
-    path: 'l-lin/spectral-comment-action',
-    branch: 'test-comment-pr',
-    buildDir: '/home/llin/spectral-comment-action'
+    repository: 'l-lin/spectral-comment-action',
+    headRef: 'test-comment-pr',
+    workspace: '/home/llin/spectral-comment-action'
   };
   const relativeFilePath = 'sample/spec/openapi.yml';
   const note = buildNote(pb, project, relativeFilePath);
@@ -79,9 +79,9 @@ test('buildNotes', () => {
   ];
   const project = {
     githubURL: 'https://github.com',
-    path: 'l-lin/spectral-comment-action',
-    branch: 'test-comment-pr',
-    buildDir: '/home/llin/spectral-comment-action'
+    repository: 'l-lin/spectral-comment-action',
+    headRef: 'test-comment-pr',
+    workspace: '/home/llin/spectral-comment-action'
   };
   const absFilePath = '/home/llin/spectral-comment-action/sample/spec/openapi.yml';
   const notes = buildNotes(pbs, project, absFilePath);

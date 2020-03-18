@@ -48,9 +48,9 @@ test('1 errors', async () => {
 
   let md = await toMarkdown(results, {
     githubURL: 'https://github.com',
-    path: 'l-lin/spectral-comment-action',
-    branch: 'test-comment-pr',
-    buildDir: '/home/llin/spectral-comment-action'
+    repository: 'l-lin/spectral-comment-action',
+    headRef: 'test-comment-pr',
+    workspace: '/home/llin/spectral-comment-action'
   });
   expect(md).not.toBeNull();
   expect(md).toBe(`<details>
@@ -230,9 +230,9 @@ test('multiple errors', async () => {
   };
   let md = await toMarkdown(pbs, {
     githubURL: 'https://github.com',
-    path: 'l-lin/spectral-comment-action',
-    branch: 'test-comment-pr',
-    buildDir: '/home/llin/spectral-comment-action'
+    repository: 'l-lin/spectral-comment-action',
+    headRef: 'test-comment-pr',
+    workspace: '/home/llin/spectral-comment-action'
   });
   expect(md).not.toBeNull();
   expect(md).toBe(`<details>

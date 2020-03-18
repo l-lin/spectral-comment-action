@@ -12,13 +12,13 @@ let buildRelativeFilePath = (absFilePath, projectDir) => {
 let buildNote = (pb, project, relativeFilePath) => {
   const line = pb.range.start.line + 1;
   const column = pb.range.start.character + 1;
-  const link = project.githubURL + '/' + project.path + '/blob/' + project.branch + '/' + relativeFilePath + '#L' + line;
+  const link = project.githubURL + '/' + project.repository + '/blob/' + project.headRef + '/' + relativeFilePath + '#L' + line;
   return `|[${relativeFilePath}:${line}:${column}](${link})|${emojisMap[pb.severity]}|${pb.code}|${pb.message}|`;
 };
 
 
 let buildNotes = (pbs, project, absFilePath) => {
-  const relativeFilePath = buildRelativeFilePath(absFilePath, project.buildDir);
+  const relativeFilePath = buildRelativeFilePath(absFilePath, project.workspace);
   let md = `> ${relativeFilePath}
 
 |Range|Severity|Code|Message|

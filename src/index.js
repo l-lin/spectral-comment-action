@@ -23,12 +23,12 @@ async function run() {
     };
     const project = {
       githubURL: inputs.githubURL,
-      path: process.env.GITHUB_REPOSITORY,
-      branch: process.env.GITHUB_REF,
-      buildDir: process.env.GITHUB_WORKSPACE
+      repository: process.env.GITHUB_REPOSITORY,
+      headRef: process.env.GITHUB_HEAD_REF,
+      workspace: process.env.GITHUB_WORKSPACE
     };
 
-    const fileContents = await readFilesToAnalyze(project.buildDir, inputs.fileGlob);
+    const fileContents = await readFilesToAnalyze(project.workspace, inputs.fileGlob);
     const spectral = await createSpectral(inputs.spectralRuleset);
     let processedPbs = initProcessedPbs();
     for (var i = 0, len = fileContents.length; i < len; i++) {
@@ -38,16 +38,20 @@ async function run() {
 
     const md = await toMarkdown(processedPbs, project);
 
-    const octokit = new github.GitHub(inputs.githubToken);
-    const repoName = context.repo.repo;
-    const repoOwner = context.repo.owner;
-    const prNumber = context.payload.pull_request.number;
-    await octokit.issues.createComment({
-      repo: repoName,
-      owner: repoOwner,
-      body: md,
-      issue_number: prNumber,
-    });
+    if (md === '') {
+      core.info('No lint error found! Congratulation!');
+    } else {
+      const octokit = new github.GitHub(inputs.githubToken);
+      const repoName = context.repo.repo;
+      const repoOwner = context.repo.owner;
+      const prNumber = context.payload.pull_request.number;
+      await octokit.issues.createComment({
+        repo: repoName,
+        owner: repoOwner,
+        body: md,
+        issue_number: prNumber,
+      });
+    }
   }
   catch (error) {
     core.setFailed(error.message);
