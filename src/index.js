@@ -51,6 +51,9 @@ async function run() {
         body: md,
         issue_number: prNumber,
       });
+      if (processedPbs.severitiesCount[0] > 0) {
+        core.setFailed('There are ' + processedPbs.severitiesCount[0] + ' lint errors!');
+      }
     }
   }
   catch (error) {
