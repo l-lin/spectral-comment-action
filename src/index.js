@@ -32,7 +32,7 @@ async function run() {
     const spectral = await createSpectral();
     let processedPbs = initProcessedPbs();
     for (var i = 0, len = fileContents.length; i < len; i++) {
-      const pbs = await runSpectral(spectral, fileContents[i]);
+      const pbs = await runSpectral(spectral, fileContents[i].content);
       processedPbs = processPbs(processedPbs, pbs);
     }
 

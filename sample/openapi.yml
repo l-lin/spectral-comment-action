@@ -1,0 +1,42 @@
+openapi: 3.0.1
+info:
+  title: Sample
+  contact:
+    name: REST API
+    email: spectral-comment-action@noreply.com
+    url: https://github.com/spectral-comment-action/issues/new
+  version: 0.0.1
+tags:
+- name: greetings
+  description: Server greets client
+paths:
+  /hello-world:
+    get:
+      tags:
+      - greetings
+      description: Simple greeting
+      operationId: getGreetings
+      responses:
+        200:
+          description: Greeting from the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Greeting'
+              examples:
+                sample:
+                  $ref: '#/components/examples/greetings.yml'
+components:
+  schemas:
+    Greeting:
+      type: object
+      description: Object representing the message delivered by the server
+      properties:
+        message:
+          type: string
+          description: The message delivered by the server
+  examples:
+    Greeting:
+      value:
+        message: "Hello, world"
+

@@ -1,9 +1,0 @@
-foobar:
-  get:
-    responses:
-      200:
-        content:
-          application/json:
-            schema:
-              $ref: '../schemas/foobar.yml#/foobar'
-
